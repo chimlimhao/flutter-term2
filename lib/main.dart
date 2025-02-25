@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'screens/ride_pref/ride_pref_screen.dart';
 import 'theme/theme.dart';
+import 'test_services.dart';
 
 void main() {
-  runApp(const MyApp());
+  // For testing services
+  testRidesService();
+
+  // // Run the actual app
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
