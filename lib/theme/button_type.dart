@@ -1,0 +1,1 @@
+enum BlaButtonType { primary, secondary }
