@@ -10,7 +10,8 @@ class RidePrefHistoryTile extends StatelessWidget {
   final RidePref ridePref;
   final VoidCallback? onPressed;
 
-  const RidePrefHistoryTile({super.key, required this.ridePref, this.onPressed});
+  const RidePrefHistoryTile(
+      {super.key, required this.ridePref, this.onPressed});
 
   String get title => "${ridePref.departure.name} → ${ridePref.arrival.name}";
 
@@ -21,10 +22,19 @@ class RidePrefHistoryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: onPressed,
-      title: Text(title, style: BlaTextStyles.body.copyWith(color: BlaColors.textNormal)),
-      subtitle: Text(subTitle, style: BlaTextStyles.label.copyWith(color: BlaColors.textLight)),
-      leading: Icon(Icons.history, color: BlaColors.iconLight,),
-      trailing: Icon(Icons.arrow_forward_ios, color: BlaColors.iconLight, size: 16,),
+      title: Text(title,
+          style: BlaTextStyles.body.copyWith(color: BlaColors.textNormal)),
+      subtitle: Text(subTitle,
+          style: BlaTextStyles.label.copyWith(color: BlaColors.textLight)),
+      leading: Icon(
+        Icons.history,
+        color: BlaColors.iconLight,
+      ),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        color: BlaColors.iconLight,
+        size: 16,
+      ),
     );
   }
 }

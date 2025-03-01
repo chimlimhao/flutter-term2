@@ -49,17 +49,25 @@ class _RidePrefScreenState extends State<RidePrefScreen> {
                 const SizedBox(height: 100),
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: BlaSpacings.xxl),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  // decoration: BoxDecoration(
+                  //   color: Colors.white,
+                  //   borderRadius: BorderRadius.circular(16),
+                  // ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       // 2.1 Display the Form to input the ride preferences
-                      RidePrefForm(
-                        initRidePref: RidePrefService.currentRidePref,
+                      Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: BlaColors.neutralLight),
+                          borderRadius: BorderRadius.circular(BlaSpacings.m),
+                        ),
+                        child: RidePrefForm(
+                          initRidePref: RidePrefService.currentRidePref,
+                        ),
                       ),
                       const SizedBox(height: BlaSpacings.m),
 
