@@ -7,6 +7,7 @@ import '../../../screens/rides/rides_screen.dart';
 import '../../../theme/theme.dart';
 import '../../../utils/animations_util.dart';
 import '../../../widgets/inputs/bla_location_picker.dart';
+import '../../../widgets/inputs/bla_seat_picker.dart';
 
 ///
 /// A Ride Preference From is a view to select:
@@ -93,8 +94,20 @@ class _RidePrefFormState extends State<RidePrefForm> {
   }
 
   void onDepartureDateTap() {}
+  void onRequestedSeatsTap() async {
+    final int? result = await Navigator.push(
+      context,
+      AnimationUtils.createBottomToTopRoute(
+        BlaSeatPicker(initialSeats: requestedSeats),
+      ),
+    );
 
-  void onRequestedSeatsTap() {}
+    if (result != null) {
+      setState(() {
+        requestedSeats = result;
+      });
+    }
+  }
 
   void onSearchPressed() {
     // Check if both departure and arrival are selected
