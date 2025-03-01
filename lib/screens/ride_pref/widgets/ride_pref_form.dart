@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../model/ride/locations.dart';
 import '../../../model/ride_pref/ride_pref.dart';
+import '../../../screens/rides/rides_screen.dart';
 import '../../../theme/theme.dart';
 import '../../../utils/animations_util.dart';
 import '../../../widgets/inputs/bla_location_picker.dart';
@@ -95,7 +96,35 @@ class _RidePrefFormState extends State<RidePrefForm> {
 
   void onRequestedSeatsTap() {}
 
-  void onSearchPressed() {}
+  void onSearchPressed() {
+    // Check if both departure and arrival are selected
+    if (departure == null || arrival == null) {
+      // Show a snackbar or dialog to inform the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select both departure and arrival locations'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Create a RidePref object with the current form values
+    final ridePref = RidePref(
+      departure: departure!,
+      departureDate: departureDate,
+      arrival: arrival!,
+      requestedSeats: requestedSeats,
+    );
+
+    // Navigate to the Rides Screen with the ride preferences
+    Navigator.push(
+      context,
+      AnimationUtils.createBottomToTopRoute(
+        RidesScreen(ridePref: ridePref),
+      ),
+    );
+  }
 
   // ----------------------------------
   // Compute the widgets rendering

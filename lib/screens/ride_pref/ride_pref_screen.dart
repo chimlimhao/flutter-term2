@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../model/ride_pref/ride_pref.dart';
+import '../../screens/rides/rides_screen.dart';
 import '../../service/ride_prefs_service.dart';
 import '../../theme/theme.dart';
+import '../../utils/animations_util.dart';
 import '../../widgets/display/bla_divider.dart';
 
 import 'widgets/ride_pref_form.dart';
@@ -24,7 +26,13 @@ class RidePrefScreen extends StatefulWidget {
 
 class _RidePrefScreenState extends State<RidePrefScreen> {
   onRidePrefSelected(RidePref ridePref) {
-    // 1 - Navigate to the rides screen (with a buttom to top animation)
+    // Navigate to the rides screen with a bottom to top animation
+    Navigator.push(
+      context,
+      AnimationUtils.createBottomToTopRoute(
+        RidesScreen(ridePref: ridePref),
+      ),
+    );
   }
 
   @override
