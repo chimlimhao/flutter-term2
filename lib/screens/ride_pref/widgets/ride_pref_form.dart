@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../model/ride/locations.dart';
 import '../../../model/ride_pref/ride_pref.dart';
 import '../../../theme/theme.dart';
+import '../../../widgets/inputs/bla_location_picker.dart';
 
 ///
 /// A Ride Preference From is a view to select:
@@ -50,15 +51,44 @@ class _RidePrefFormState extends State<RidePrefForm> {
   // ----------------------------------
   // Handle events
   // ----------------------------------
+
   void onLocationSwap() {
-    final tempDeparture = departure;
-    departure = arrival;
-    arrival = tempDeparture;
+    setState(() {
+      final tempDeparture = departure;
+      departure = arrival;
+      arrival = tempDeparture;
+    });
   }
 
-  void onDepartureTap() {}
+  void onDepartureTap() async {
+    final Location? result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlaLocationPicker(initLocation: departure),
+      ),
+    );
 
-  void onArrivalTap() {}
+    if (result != null) {
+      setState(() {
+        departure = result;
+      });
+    }
+  }
+
+  void onArrivalTap() async {
+    final Location? result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BlaLocationPicker(initLocation: arrival),
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        arrival = result;
+      });
+    }
+  }
 
   void onDepartureDateTap() {}
 
@@ -133,7 +163,7 @@ class _RidePrefFormState extends State<RidePrefForm> {
                 ],
               ),
             ),
-            if (departure != null)
+            if (departure != null && arrival != null)
               InkWell(
                 onTap: onLocationSwap,
                 child: Icon(Icons.swap_horiz, color: BlaColors.primary),
