@@ -1,14 +1,14 @@
-// import 'package:app/screens/test/button_test_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:app/repository/mock/mock_ride_preferences_repository.dart';
 import 'screens/ride_pref/ride_pref_screen.dart';
+import 'service/ride_prefs_service.dart';
 import 'theme/theme.dart';
-// import 'test_services.dart';
 
 void main() {
-  // // For testing services
-  // testRidesService();
+  // 1 - Initialize the services
+  RidePrefService.initialize(MockRidePreferencesRepository());
 
-  // Run the actual app
+  // 2- Run the UI
   runApp(const MyApp());
 }
 
@@ -20,8 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: appTheme,
-      home: const Scaffold(body: RidePrefScreen()),
-      // home: const ButtonTestScreen(),
+      home: Scaffold(body: RidePrefScreen()),
     );
   }
 }

@@ -7,13 +7,5 @@ import '../dummy_data/dummy_data.dart';
 ///   - The list of available rides
 ///
 class LocationsService {
-  static const List<Location> availableLocations =
-      fakeLocations; // TODO for now fake data
-
-  static List<Location> filterLocationByName(String name) {
-    String query = name.toLowerCase();
-    return availableLocations
-        .where((location) => location.name.toLowerCase().contains(query))
-        .toList();
-  }
+  static const List<Location> availableLocations = fakeLocations;
 }

@@ -1,19 +1,67 @@
-import '../dummy_data/dummy_data.dart';
+import 'package:app/repository/mock/mock_ride_preferences_repository.dart';
+
 import '../model/ride_pref/ride_pref.dart';
+import '../repository/ride_preferences_repository.dart';
 
 ////
 ///   This service handles:
-///   - History of the last ride preferences        (to allow users to re-use their last preferences)
-///   - Curent selected ride preferences.
+///   - The past ride preferences
+///   - The currennt ride preferences
 ///
 class RidePrefService {
-  ///
-  /// List of past entered ride prefs. LIFO (most recents first)
-  ///
-  static List<RidePref> ridePrefsHistory =
-      fakeRidePrefs; // TODO for now fake data
+  // Static private instance
+  static RidePrefService? _instance;
 
-  static RidePref? currentRidePref;
+  // Access to past preferences
+  final RidePreferencesRepository repository;
 
-  static bool get hasCurrentRidePref => currentRidePref != null;
+  // The current preference
+  RidePreference? _currentPreference;
+
+  ///
+  /// Private constructor
+  ///
+  RidePrefService._internal(this.repository);
+
+  ///
+  /// Initialize
+  ///
+  static void initialize(RidePreferencesRepository repository) {
+    if (_instance == null) {
+      _instance = RidePrefService._internal(repository);
+    } else {
+      throw Exception("RidePreferencesService is already initialized.");
+    }
+  }
+
+  ///
+  /// Singleton accessor
+  ///
+  static RidePrefService get instance {
+    if (_instance == null) {
+      throw Exception(
+          "RidePreferencesService is not initialized. Call initialize() first.");
+    }
+    return _instance!;
+  }
+
+  // Current preference
+  RidePreference? get currentPreference {
+    print('Get  current  pref : $_currentPreference');
+    return _currentPreference;
+  }
+
+  void setCurrentPreference(RidePreference preference) {
+    _currentPreference = preference;
+    print('Set current pref to $_currentPreference');
+  }
+
+  // Past preferences
+  List<RidePreference> getPastPreferences() {
+    return repository.getPastPreferences();
+  }
+
+  void addPreference(RidePreference preference) {
+    return repository.addPreference(preference);
+  }
 }
