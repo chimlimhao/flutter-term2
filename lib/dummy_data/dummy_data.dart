@@ -174,9 +174,10 @@ List<Ride> fakeRides = List.generate(50, (index) {
     departureLocation: departureLocation,
     departureDate: departureTime,
     arrivalLocation: arrivalLocation,
-    arrivalDateTime: arrivalTime,
+    // arrivalDateTime: arrivalTime,
     driver: driver,
     availableSeats: availableSeats,
     pricePerSeat: pricePerSeat,
+    duration: Duration(hours: random.nextInt(5) + 2),
   );
 });

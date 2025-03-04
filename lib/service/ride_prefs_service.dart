@@ -1,5 +1,3 @@
-import 'package:app/repository/mock/mock_ride_preferences_repository.dart';
-
 import '../model/ride_pref/ride_pref.dart';
 import '../repository/ride_preferences_repository.dart';
 
