@@ -52,8 +52,10 @@ class MockRidesRepository extends RidesRepository {
     verifiedProfile: true,
   );
 
+  // List of rides
   final List<Ride> _rides = [];
 
+  // Constructor
   MockRidesRepository() {
     _initializeRides();
   }
@@ -61,8 +63,8 @@ class MockRidesRepository extends RidesRepository {
   void _initializeRides() {
     _rides.addAll([
       Ride(
-        departureLocation: Location(name: 'Battambang', country: Country.kh),
-        arrivalLocation: Location(name: 'SiemReap', country: Country.kh),
+        departureLocation: Location(name: 'Battambong', country: Country.kh),
+        arrivalLocation: Location(name: 'Siem Reap', country: Country.kh),
         departureDate: _getTodayAt(5, 30), // 5:30 AM
         duration: const Duration(hours: 2),
         driver: _kannika,
@@ -71,8 +73,8 @@ class MockRidesRepository extends RidesRepository {
         pricePerSeat: 15.0,
       ),
       Ride(
-        departureLocation: Location(name: 'Battambang', country: Country.kh),
-        arrivalLocation: Location(name: 'SiemReap', country: Country.kh),
+        departureLocation: Location(name: 'Battambong', country: Country.kh),
+        arrivalLocation: Location(name: 'Siem Reap', country: Country.kh),
         departureDate: _getTodayAt(20, 0), // 8:00 PM
         duration: const Duration(hours: 2),
         driver: _chaylim,
@@ -81,8 +83,8 @@ class MockRidesRepository extends RidesRepository {
         pricePerSeat: 15.0,
       ),
       Ride(
-        departureLocation: Location(name: 'Battambang', country: Country.kh),
-        arrivalLocation: Location(name: 'SiemReap', country: Country.kh),
+        departureLocation: Location(name: 'Battambong', country: Country.kh),
+        arrivalLocation: Location(name: 'Siem Reap', country: Country.kh),
         departureDate: _getTodayAt(5, 0), // 5:00 AM
         duration: const Duration(hours: 3),
         driver: _mengtech,
@@ -91,8 +93,8 @@ class MockRidesRepository extends RidesRepository {
         pricePerSeat: 12.0,
       ),
       Ride(
-        departureLocation: Location(name: 'Battambang', country: Country.kh),
-        arrivalLocation: Location(name: 'SiemReap', country: Country.kh),
+        departureLocation: Location(name: 'Battambong', country: Country.kh),
+        arrivalLocation: Location(name: 'Siem Reap', country: Country.kh),
         departureDate: _getTodayAt(20, 0), // 8:00 PM
         duration: const Duration(hours: 2),
         driver: _limhao,
@@ -101,8 +103,8 @@ class MockRidesRepository extends RidesRepository {
         pricePerSeat: 15.0,
       ),
       Ride(
-        departureLocation: Location(name: 'Battambang', country: Country.kh),
-        arrivalLocation: Location(name: 'SiemReap', country: Country.kh),
+        departureLocation: Location(name: 'Battambong', country: Country.kh),
+        arrivalLocation: Location(name: 'Siem Reap', country: Country.kh),
         departureDate: _getTodayAt(5, 0), // 5:00 AM
         duration: const Duration(hours: 3),
         driver: _sovanda,
@@ -116,17 +118,30 @@ class MockRidesRepository extends RidesRepository {
   @override
   List<Ride> getRides(RidePreference preference, RidesFilter? filter) {
     return _rides.where((ride) {
-      // 1 - Match departure and arrival locations
+      // 1 - Check if locations match
       bool locationMatch =
-          ride.departureLocation.name == preference.departure.name &&
-              ride.arrivalLocation.name == preference.arrival.name;
+          ride.departureLocation.name.toLowerCase().replaceAll(' ', '') ==
+                  preference.departure.name.toLowerCase().replaceAll(' ', '') &&
+              ride.arrivalLocation.name.toLowerCase().replaceAll(' ', '') ==
+                  preference.arrival.name.toLowerCase().replaceAll(' ', '');
 
-      // 2 - If filter is provided, check pets acceptance
+      // 2 - Check if ride has available seats
+      bool hasSeats = ride.availableSeats > 0;
+
+      print('Checking ride:');
+      print('- Departure: ${ride.departureLocation.name}');
+      print('- Arrival: ${ride.arrivalLocation.name}');
+      print('- Available seats: ${ride.availableSeats}');
+      print('- Match: $locationMatch');
+
+      // 3 - If filter is provided, check pets acceptance
       if (filter?.acceptPets != null) {
-        return locationMatch && ride.acceptsPets == filter!.acceptPets;
+        return locationMatch &&
+            hasSeats &&
+            ride.acceptsPets == filter!.acceptPets;
       }
 
-      return locationMatch;
+      return locationMatch && hasSeats;
     }).toList();
   }
 
