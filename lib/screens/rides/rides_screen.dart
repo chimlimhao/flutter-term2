@@ -8,6 +8,7 @@ import '../../service/rides_service.dart';
 import '../../theme/theme.dart';
 
 import 'widgets/rides_tile.dart';
+import 'widgets/ride_pref_modal.dart';
 
 ///
 ///  The Ride Selection screen allow user to select a ride, once ride preferences have been defined.
@@ -40,15 +41,28 @@ class _RidesScreenState extends State<RidesScreen> {
       RidesService.instance.getRidesFor(currentPreference);
 
   void onBackPressed() {
+    // Save the current preference before going back
+    RidePrefService.instance.setCurrentPreference(currentPreference);
     Navigator.of(context).pop(); //  Back to the previous view
   }
 
   void onPreferencePressed() async {
-    // TODO  6 : we should push the modal with the current pref
+    // Show the modal with the current pref
+    RidePreference? newPreference = await showModalBottomSheet<RidePreference>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => RidePrefModal(initialPreference: currentPreference),
+    );
 
-    // TODO 9 :  After pop, we should get the new current pref from the modal
-
-    // TODO 10 :  Then we should update the service current pref,   and update the view
+    // If we got a new preference from the modal
+    if (newPreference != null) {
+      // Update the service current pref
+      RidePrefService.instance.setCurrentPreference(newPreference);
+      // Update the view
+      setState(() {
+        currentPreference = newPreference;
+      });
+    }
   }
 
   void onFilterPressed() {}
