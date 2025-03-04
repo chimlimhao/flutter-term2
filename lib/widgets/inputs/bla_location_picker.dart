@@ -11,7 +11,10 @@ class BlaLocationPicker extends StatefulWidget {
   final Location?
       initLocation; // The picker can be triguer with an existing location name
 
-  const BlaLocationPicker({super.key, this.initLocation});
+  const BlaLocationPicker({
+    super.key,
+    this.initLocation,
+  });
 
   @override
   State<BlaLocationPicker> createState() => _BlaLocationPickerState();
@@ -19,6 +22,7 @@ class BlaLocationPicker extends StatefulWidget {
 
 class _BlaLocationPickerState extends State<BlaLocationPicker> {
   List<Location> filteredLocations = [];
+  String initialSearchText = '';
 
   // ----------------------------------
   // Initialize the Form attributes
@@ -29,7 +33,12 @@ class _BlaLocationPickerState extends State<BlaLocationPicker> {
     super.initState();
 
     if (widget.initLocation != null) {
-      filteredLocations = getLocationsFor(widget.initLocation!.name);
+      // Set the initial search text to the selected location name
+      initialSearchText = widget.initLocation!.name;
+      filteredLocations = getLocationsFor(initialSearchText);
+    } else {
+      // Show all locations by default
+      filteredLocations = LocationsService.getAvailableLocations();
     }
   }
 
@@ -45,8 +54,11 @@ class _BlaLocationPickerState extends State<BlaLocationPicker> {
     List<Location> newSelection = [];
 
     if (searchText.length > 1) {
-      // We start to search from 2 characters only.
+      // Start to search from 2 characters only.
       newSelection = getLocationsFor(searchText);
+    } else {
+      // Show all locations when search is cleared
+      newSelection = LocationsService.getAvailableLocations();
     }
 
     setState(() {
@@ -55,36 +67,36 @@ class _BlaLocationPickerState extends State<BlaLocationPicker> {
   }
 
   List<Location> getLocationsFor(String text) {
-    return LocationsService.availableLocations
-        .where((location) =>
-            location.name.toUpperCase().contains(text.toUpperCase()))
-        .toList();
+    return LocationsService.getLocationsFor(text);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.only(
-          left: BlaSpacings.m, right: BlaSpacings.m, top: BlaSpacings.s),
-      child: Column(
-        children: [
-          // Top search Search bar
-          BlaSearchBar(
-            onBackPressed: onBackSelected,
-            onSearchChanged: onSearchChanged,
-          ),
+        body: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.only(
+            left: BlaSpacings.m, right: BlaSpacings.m, top: BlaSpacings.s),
+        child: Column(
+          children: [
+            // Top search Search bar
+            BlaSearchBar(
+              onBackPressed: onBackSelected,
+              onSearchChanged: onSearchChanged,
+              initQuery: initialSearchText,
+            ),
 
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredLocations.length,
-              itemBuilder: (ctx, index) => LocationTile(
-                location: filteredLocations[index],
-                onSelected: onLocationSelected,
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredLocations.length,
+                itemBuilder: (ctx, index) => LocationTile(
+                  location: filteredLocations[index],
+                  onSelected: onLocationSelected,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ));
   }
@@ -127,10 +139,14 @@ class LocationTile extends StatelessWidget {
 ///
 class BlaSearchBar extends StatefulWidget {
   const BlaSearchBar(
-      {super.key, required this.onSearchChanged, required this.onBackPressed});
+      {super.key,
+      required this.onSearchChanged,
+      required this.onBackPressed,
+      this.initQuery = ''});
 
   final Function(String text) onSearchChanged;
   final VoidCallback onBackPressed;
+  final String initQuery;
 
   @override
   State<BlaSearchBar> createState() => _BlaSearchBarState();
@@ -141,6 +157,12 @@ class _BlaSearchBarState extends State<BlaSearchBar> {
   final FocusNode _focusNode = FocusNode();
 
   bool get searchIsNotEmpty => _controller.text.isNotEmpty;
+
+  @override
+  void initState() {
+    _controller.text = widget.initQuery;
+    super.initState();
+  }
 
   void onChanged(String newText) {
     // 1 - Notity the listener
@@ -185,7 +207,7 @@ class _BlaSearchBarState extends State<BlaSearchBar> {
               focusNode: _focusNode, // Keep focus
               onChanged: onChanged,
               controller: _controller,
-              style: TextStyle(color: BlaColors.textLight),
+              style: TextStyle(color: BlaColors.textNormal),
               decoration: InputDecoration(
                 hintText: "Any city, street...",
                 border: InputBorder.none, // No border
